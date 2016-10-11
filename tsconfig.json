@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "removeComments": true,
+    "target": "es6",
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
+    "types": [
+      "firebase"
+    ],
+    "baseUrl": "./src",
+    "emitDecoratorMetadata": true
+  },
+  "awesomeTypescriptLoaderOptions": {
+    "emitRequireType": true
+  },
+  "compileOnSave": false,
+  "buildOnSave": false
+}

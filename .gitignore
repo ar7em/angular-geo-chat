@@ -1,0 +1,8 @@
+# System
+.DS_Store
+
+# Configs
+src/config/firebase.ts
+src/config/maps.ts
+
+node_modules

@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "require": false,
+    "module": false,
+    "__dirname": false
+  },
+  "rules": {
+    "semi": 2,
+    "quotes": [
+      2,
+      "double"
+    ]
+  }
+}

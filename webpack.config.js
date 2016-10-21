@@ -1,6 +1,6 @@
 var path = require("path");
 var ForkCheckerPlugin = require("awesome-typescript-loader").ForkCheckerPlugin;
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   devtool: "cheap-module-source-map",

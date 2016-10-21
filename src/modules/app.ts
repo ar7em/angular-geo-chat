@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { AppComponent } from "components/app/app";
+import { MapComponent } from "components/map/map";
 import { AngularFireModule } from "angularfire2";
 import { firebaseConfig } from "config/firebase";
 
@@ -9,8 +10,8 @@ import { firebaseConfig } from "config/firebase";
     BrowserModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
-  declarations: [ AppComponent ],
-  bootstrap: [ AppComponent ]
+  declarations: [ AppComponent, MapComponent ],
+  bootstrap: [ AppComponent, MapComponent ]
 })
 
 export class AppModule {};

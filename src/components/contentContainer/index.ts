@@ -1,13 +1,12 @@
 import { Component } from "@angular/core";
-import { AngularFire, FirebaseListObservable } from "angularfire2";
+import { AngularFire } from "angularfire2";
 
 @Component({
-  selector: "root-app",
+  selector: "content",
   template: require("./template.html"),
   styles: [require("./style.scss")]
 })
-export class AppComponent {
-  items: FirebaseListObservable<any[]>;
+export class ContentContainer {
   constructor(af: AngularFire) {
   }
 }

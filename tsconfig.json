@@ -9,7 +9,9 @@
       "../node_modules/@types"
     ],
     "types": [
-      "firebase"
+      "firebase",
+      "googlemaps",
+      "hammerjs"
     ],
     "baseUrl": "./src",
     "emitDecoratorMetadata": true

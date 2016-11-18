@@ -10,7 +10,7 @@ const apiUrl = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
   styles: [require("./style.scss")]
 })
 export class MapComponent {
-  static API: Promise<any>;
+  static API: any;
   static count: number = 1;
 
   private mapId: string;
@@ -19,19 +19,19 @@ export class MapComponent {
   constructor(af: AngularFire) {
     this.mapId = "googleMaps" + MapComponent.count++;
 
-    MapComponent.API = this.load();
-    this.map = MapComponent.API.then((API) => {
+    this.map = this.load().then((API) => {
+      MapComponent.API = API;
       return new API.Map(document.getElementById(this.mapId), {
         center: {lat: -34.397, lng: 150.644},
-        scrollwheel: false,
-        zoom: 8
+        zoom: 8,
+        disableDefaultUI: true
       });
     });
   }
 
   public setCenter(): void {
     this.map.then( (map) => {
-      map.setCenter(new google.maps.LatLng(59.436962, 24.753574));
+      map.setCenter(new MapComponent.API.LatLng(59.436962, 24.753574));
     });
   }
 

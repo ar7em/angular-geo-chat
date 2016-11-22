@@ -17,4 +17,5 @@ import { firebaseConfig } from "config/firebase";
   declarations: [ AppComponent, MapComponent, ContentContainer ],
   bootstrap: [ AppComponent ]
 })
-export class AppModule {};
+export class AppModule {
+};

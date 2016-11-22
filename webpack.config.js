@@ -16,7 +16,9 @@ module.exports = {
       templates: path.join(__dirname, "src", "templates"),
       components: path.join(__dirname, "src", "components"),
       modules: path.join(__dirname, "src", "modules"),
-      config: path.join(__dirname, "src", "config")
+      config: path.join(__dirname, "src", "config"),
+      services: path.join(__dirname, "src", "services"),
+      models: path.join(__dirname, "src", "models")
     },
     modulesDirectories: ["node_modules"]
   },

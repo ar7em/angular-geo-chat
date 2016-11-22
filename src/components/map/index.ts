@@ -1,53 +1,30 @@
-import { Component } from "@angular/core";
-import { AngularFire, FirebaseListObservable } from "angularfire2";
-import { apiKey } from "config/maps";
+import { Component, OnInit } from "@angular/core";
 
-const apiUrl = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+import { MapService } from "services/map";
+import { GeoMap } from "models/map";
+
+const mapElementId = "googleMap";
 
 @Component({
   selector: "map",
-  template: require("./template.html"),
-  styles: [require("./style.scss")]
+  template: require("./template.html").replace("`${mapElementId}`", mapElementId),
+  styles: [require("./style.scss")],
+  providers: [MapService]
 })
 export class MapComponent {
-  static API: any;
-  static count: number = 1;
+  map: GeoMap;
 
-  private mapId: string;
-  private map: Promise<google.maps.Map>;
+  constructor(private mapService: MapService) {
+  }
 
-  constructor(af: AngularFire) {
-    this.mapId = "googleMaps" + MapComponent.count++;
-
-    this.map = this.load().then((API) => {
-      MapComponent.API = API;
-      return new API.Map(document.getElementById(this.mapId), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8,
-        disableDefaultUI: true
-      });
+  createMap(): void {
+    let element = document.getElementById(mapElementId);
+    this.mapService.createMap(element).then((map: GeoMap) => {
+      this.map = map;
     });
   }
 
-  public setCenter(): void {
-    this.map.then( (map) => {
-      map.setCenter(new MapComponent.API.LatLng(59.436962, 24.753574));
-    });
+  ngOnInit(): void {
+    this.createMap();
   }
-
-  private load(): Promise<any> {
-    if (MapComponent.API) {
-      return MapComponent.API;
-    }
-
-    let node = <HTMLScriptElement>document.createElement("script");
-    node.src = apiUrl;
-    node.type = "text/javascript";
-    document.getElementsByTagName("body")[0].appendChild(node);
-    return new Promise((resolve) => {
-      node.onload = function() {
-        resolve((window as any)["google"]["maps"]);
-      };
-    });
-  };
 }

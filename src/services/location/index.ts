@@ -1,20 +1,29 @@
 import { Injectable } from "@angular/core";
 import { Subject }    from "rxjs/Subject";
 
+import { Location } from "models/location";
+
 @Injectable()
 export class LocationService {
-  private locationRequestedSource = new Subject<string>();
+  private locationRequestedSource = new Subject<Location>();
   locationRequested$ = this.locationRequestedSource.asObservable();
 
-  requestLocation(location: string): void {
-    if (!location) {
+  requestLocation(name: string): void {
+    if (!name) {
       this.getCurrentPosition().then( (position) => {
-        this.locationRequestedSource.next(position);
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+        let location = new Location(undefined, lat, lng);
+        this.locationRequestedSource.next(location);
       });
+
+      return;
     }
+
+    let location = new Location(name);
     this.locationRequestedSource.next(location);
   };
-  
+
   getCurrentPosition(): Promise<any> {
     if (window.navigator.geolocation) {
       return new Promise((resolve) => {

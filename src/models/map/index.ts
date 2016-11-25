@@ -14,20 +14,4 @@ export class GeoMap {
   public setCenter(): void {
     this.map.setCenter(new this.API.LatLng(59.436962, 24.753574));
   }
-
-  private getCurrentPosition(): Promise<any> {
-    if (window.navigator.geolocation) {
-      return new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(function(position: any) {
-          resolve(position);
-        }, function(err: any) {
-          throw new Error(err);
-        });
-      });
-    } else {
-      return new Promise((resolve) => {
-        throw new Error("Not supported");
-      });
-    }
-  }
 }

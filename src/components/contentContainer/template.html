@@ -8,7 +8,11 @@
 
   <div class="content__location">
     <md-card class="content__city">
-      City card.
+      <md-input [(ngModel)]="location" placeholder="City"> 
+      </md-input>
+      <button md-mini-fab (click)="onAutolocate()">
+        <md-icon class="md-24">auto</md-icon>
+      </button>
     </md-card>
   </div>
 

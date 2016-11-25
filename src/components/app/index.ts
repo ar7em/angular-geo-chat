@@ -1,15 +1,18 @@
 import { Component } from "@angular/core";
 import { AngularFire, FirebaseListObservable } from "angularfire2";
 
-import { GeoMap } from "models/map";
+import { LocationService } from "services/location";
+import { MapService } from "services/map";
 
 @Component({
   selector: "root-app",
   template: require("./template.html"),
-  styles: [require("./style.scss")]
+  styles: [require("./style.scss")],
+  providers: [ MapService, LocationService ]
 })
 export class AppComponent {
-  map: GeoMap;
+  location: "";
+
   items: FirebaseListObservable<any[]>;
 
   constructor(af: AngularFire) {

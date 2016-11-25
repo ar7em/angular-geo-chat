@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { Subscription }   from "rxjs/Subscription";
 
 import { MapService } from "services/map";
+import { LocationService } from "services/location";
+
 import { GeoMap } from "models/map";
 
 const mapElementId = "googleMap";
@@ -8,13 +11,20 @@ const mapElementId = "googleMap";
 @Component({
   selector: "map",
   template: require("./template.html").replace("`${mapElementId}`", mapElementId),
-  styles: [require("./style.scss")],
-  providers: [MapService]
+  styles: [require("./style.scss")]
 })
-export class MapComponent {
+export class MapComponent implements OnInit {
   map: GeoMap;
+  location: string;
+  subscription: Subscription;
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private locationService: LocationService) {
+    this.subscription = locationService.locationRequested$.subscribe(
+      (location: string) => {
+        this.location = location;
+        console.log("New location:", location);
+      }
+    );
   }
 
   createMap(): void {

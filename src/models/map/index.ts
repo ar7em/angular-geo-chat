@@ -20,10 +20,15 @@ export class GeoMap {
   public geocode(location: Location): Promise<any> {
     return new Promise( (resolve) => {
       let geocoder = new this.API.Geocoder;
-      geocoder.geocode({location: location.coordinates}, function(results: any, status: any) {
+      geocoder.geocode({location: location.coordinates}, function(results: google.maps.GeocoderResult[], status: any) {
         console.log(results, status);
-        resolve(new Location());
+        let precisePosition = new Location(location.name, location.coordinates.lat, location.coordinates.lng, results);
+        resolve(precisePosition);
       });
     });
+  }
+
+  public fitBounds(bounds: google.maps.LatLngBounds): void {
+    this.map.fitBounds(bounds);
   }
 }

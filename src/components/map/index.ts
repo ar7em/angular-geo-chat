@@ -40,11 +40,15 @@ export class MapComponent implements OnInit {
   }
 
   positionMap(): void {
-    if (!this.map || !this.location) {
+    if (!this.map) {
       return;
     }
 
-    this.map.setCenter(this.location.coordinates);
+    let city = this.location.getCity();
+
+    if (city) {
+      this.map.fitBounds(city.geometry.bounds);
+    }
   }
 
   ngOnInit(): void {

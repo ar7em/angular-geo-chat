@@ -15,6 +15,6 @@ export class ContentContainer {
   }
 
   onAutolocate(): void {
-    this.locationService.requestLocation(this.location);
+    this.locationService.requestLocation();
   }
 }

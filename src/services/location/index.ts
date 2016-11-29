@@ -8,7 +8,7 @@ export class LocationService {
   private locationRequestedSource = new Subject<Location>();
   locationRequested$ = this.locationRequestedSource.asObservable();
 
-  requestLocation(name: string): void {
+  requestLocation(name?: string): void {
     if (!name) {
       this.getCurrentPosition().then( (position) => {
         let lat = position.coords.latitude;

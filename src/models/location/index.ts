@@ -1,5 +1,6 @@
 export class Location {
   name: string;
+  placeId: string;
   private lat: number;
   private lng: number;
   private addresses: google.maps.GeocoderResult[];
@@ -11,7 +12,7 @@ export class Location {
     this.addresses = addresses;
   }
 
-  public get coordinates(): google.maps.LatLngLiteral {
+  public get coordinates(): {lat?: number, lng?: number} {
     return {
       lat: this.lat,
       lng: this.lng
@@ -24,13 +25,15 @@ export class Location {
     }
 
     let cities = this.addresses.filter(function(address: google.maps.GeocoderResult) {
-      if (address.types.indexOf("sublocality") > -1 && address.types.indexOf("political") > -1) {
+      if (address.types.indexOf("locality") > -1 && address.types.indexOf("political") > -1) {
         return true;
       }
     });
 
     if (cities.length) {
       return cities[0];
+    } else {
+      return this.addresses[0];
     }
   };
 };

@@ -18,9 +18,19 @@ export class GeoMap {
   }
 
   public geocode(location: Location): Promise<any> {
+    let query: any;
+
+    if (location.name) {
+      query = {address: location.name};
+    } else if (location.placeId) {
+      query = {placeId: location.placeId};
+    } else {
+      query = {location: location.coordinates};
+    }
+
     return new Promise( (resolve) => {
       let geocoder = new this.API.Geocoder;
-      geocoder.geocode({location: location.coordinates}, function(results: google.maps.GeocoderResult[], status: any) {
+      geocoder.geocode(query, function(results: google.maps.GeocoderResult[], status: any) {
         console.log(results, status);
         let precisePosition = new Location(location.name, location.coordinates.lat, location.coordinates.lng, results);
         resolve(precisePosition);
@@ -30,5 +40,12 @@ export class GeoMap {
 
   public fitBounds(bounds: google.maps.LatLngBounds): void {
     this.map.fitBounds(bounds);
+
+    // Move the map to the left to prevent overlap with content div
+    window.setTimeout(() => {
+      let contentDiv = document.getElementById("mainContainer");
+      let correctionX = contentDiv.clientWidth / 2;
+      this.map.panBy(correctionX, 0);
+    }, 0);
   }
 }

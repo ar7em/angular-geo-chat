@@ -3,7 +3,7 @@ var ForkCheckerPlugin = require("awesome-typescript-loader").ForkCheckerPlugin;
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  devtool: "cheap-module-source-map",
+  devtool: "source-map",
 
   entry: {
     "main": "./src/main.ts"

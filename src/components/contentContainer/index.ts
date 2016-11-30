@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { AngularFire } from "angularfire2";
 
 import { LocationService } from "services/location";
+import { facebookConfig } from "config/auth";
 
 @Component({
   selector: "content",
@@ -11,10 +12,15 @@ import { LocationService } from "services/location";
 export class ContentContainer {
   location: string;
 
-  constructor(af: AngularFire, private locationService: LocationService) {
+  constructor(public af: AngularFire, private locationService: LocationService) {
+    this.af.auth.subscribe(auth => console.log(auth));
   }
 
-  onAutolocate(): void {
-    this.locationService.requestLocation();
+  onAutolocate() {
+    this.locationService.requestLocation(this.location);
+  }
+
+  login() {
+    this.af.auth.login(facebookConfig);
   }
 }

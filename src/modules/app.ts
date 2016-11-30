@@ -8,11 +8,12 @@ import { AppComponent } from "components/app";
 import { MapComponent } from "components/map";
 import { ContentContainer } from "components/contentContainer";
 import { firebaseConfig } from "config/firebase";
+import { facebookConfig } from "config/auth";
 
 @NgModule({
   imports: [
     BrowserModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(firebaseConfig, facebookConfig),
     MaterialModule.forRoot(),
     FormsModule
   ],

@@ -3,7 +3,8 @@
   <div class="content__sidebar">
     <md-card class="content__menu">
       Menu card.
-      <button (click)="login()">Login With Facebook</button>
+      <div *ngIf="af.auth | async">{{ (af.auth | async)?.auth.displayName }}</div>
+      <div *ngIf="!(af.auth | async)"><button (click)="login()">Login With Facebook</button></div>
     </md-card>
   </div>
 

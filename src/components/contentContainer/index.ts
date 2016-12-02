@@ -1,7 +1,10 @@
 import { Component } from "@angular/core";
 import { AngularFire } from "angularfire2";
 
+import { Location } from "models/location";
+
 import { LocationService } from "services/location";
+
 import { facebookConfig } from "config/auth";
 
 @Component({
@@ -13,7 +16,13 @@ export class ContentContainer {
   location: string;
 
   constructor(public af: AngularFire, private locationService: LocationService) {
-    this.af.auth.subscribe(auth => console.log(auth));
+    this.locationService.requestLocation();
+
+    locationService.locationSet$.subscribe(
+      (location: Location) => {
+        this.location = location.getCity().formatted_address;
+      }
+    );
   }
 
   onAutolocate() {

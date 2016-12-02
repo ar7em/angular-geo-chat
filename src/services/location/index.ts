@@ -8,6 +8,9 @@ export class LocationService {
   private locationRequestedSource = new Subject<Location>();
   locationRequested$ = this.locationRequestedSource.asObservable();
 
+  private locationSetSource = new Subject<Location>();
+  locationSet$ = this.locationSetSource.asObservable();
+
   requestLocation(name?: string): void {
     if (!name) {
       this.getCurrentPosition().then( (position) => {
@@ -38,5 +41,9 @@ export class LocationService {
         throw new Error("Not supported");
       });
     }
+  }
+
+  setLocation(location: Location): void {
+    this.locationSetSource.next(location);
   }
 }

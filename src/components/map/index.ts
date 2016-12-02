@@ -16,7 +16,6 @@ const mapElementId = "googleMap";
 })
 export class MapComponent implements OnInit {
   map: GeoMap;
-  location: Location;
   requestedLocation: Location;
   subscription: Subscription;
 
@@ -25,12 +24,17 @@ export class MapComponent implements OnInit {
       (requestedLocation: Location) => {
         this.requestedLocation = requestedLocation;
         this.map.geocode(requestedLocation).then( (location: Location) => {
-          this.location = location;
-          this.positionMap();
+          locationService.setLocation(location);
         });
       }
     );
-  }
+
+    this.subscription = locationService.locationSet$.subscribe(
+      (location: Location) => {
+        this.positionMap(location);
+      }
+    );
+  };
 
   createMap(): void {
     let element = document.getElementById(mapElementId);
@@ -39,12 +43,12 @@ export class MapComponent implements OnInit {
     });
   }
 
-  positionMap(): void {
+  positionMap(location: Location): void {
     if (!this.map) {
       return;
     }
 
-    let city = this.location.getCity();
+    let city = location.getCity();
 
     if (city) {
       this.map.fitBounds(city.geometry.bounds);

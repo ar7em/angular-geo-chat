@@ -1,29 +1,24 @@
 <div class="content">
 
-  <div class="content__sidebar">
-    <md-card class="content__menu">
-      Menu card.
-      <div *ngIf="af.auth | async">{{ (af.auth | async)?.auth.displayName }}</div>
-      <div *ngIf="!(af.auth | async)"><button (click)="login()">Login With Facebook</button></div>
+  <div class="content__menu">
+    <md-card>
+      <menuContainer></menuContainer>
     </md-card>
   </div>
 
-  <div class="content__location">
+  <div class="content__locality">
     <md-card class="content__city">
-      <md-input [(ngModel)]="location" placeholder="City"> 
-      </md-input>
-      <button md-mini-fab (click)="onAutolocate()">
-        <md-icon class="md-24">auto</md-icon>
-      </button>
+      <locality></locality>
     </md-card>
   </div>
 
   <div class="content__main" id="mainContainer">
     <md-card class="content__chat">
-      Chat card.
+      <chat></chat>
     </md-card>
+
     <md-card class="content__input">
-      Input card.
+      <userInput></userInput>
     </md-card>
   </div>
 

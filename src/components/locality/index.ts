@@ -6,16 +6,13 @@ import { Location } from "models/location";
 import { LocationService } from "services/location";
 
 @Component({
-  selector: "content",
-  template: require("./template.html"),
-  styles: [require("./style.scss")]
+  selector: "locality",
+  template: require("./template.html")
 })
-export class ContentContainer {
+export class LocalityComponent {
   location: string;
 
   constructor(public af: AngularFire, private locationService: LocationService) {
-    this.locationService.requestLocation();
-
     locationService.locationSet$.subscribe(
       (location: Location) => {
         this.location = location.getCity().formatted_address;

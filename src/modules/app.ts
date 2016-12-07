@@ -8,6 +8,11 @@ import { AngularFireModule } from "angularfire2";
 import { AppComponent } from "components/app";
 import { MapComponent } from "components/map";
 import { ContentContainer } from "components/contentContainer";
+import { ChatComponent } from "components/chat";
+import { MenuComponent } from "components/menu";
+import { LocalityComponent } from "components/locality";
+import { UserInputComponent } from "components/input";
+
 import { firebaseConfig } from "config/firebase";
 import { facebookConfig } from "config/auth";
 
@@ -22,7 +27,11 @@ import { facebookConfig } from "config/auth";
   declarations: [
     AppComponent,
     MapComponent,
-    ContentContainer
+    ContentContainer,
+    ChatComponent,
+    MenuComponent,
+    LocalityComponent,
+    UserInputComponent
   ],
   bootstrap: [ AppComponent ]
 })

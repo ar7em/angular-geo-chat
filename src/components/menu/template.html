@@ -1,0 +1,5 @@
+<div>
+  Menu card.
+  <div *ngIf="af.auth | async">{{ (af.auth | async)?.auth.displayName }}</div>
+  <div *ngIf="!(af.auth | async)"><button (click)="login()">Login With Facebook</button></div>
+</div>

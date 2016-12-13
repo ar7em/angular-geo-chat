@@ -8,3 +8,4 @@ src/config/maps.ts
 dist
 
 node_modules
+npm-debug.log

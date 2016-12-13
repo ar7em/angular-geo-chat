@@ -22,8 +22,8 @@ export class GeoMap {
 
     if (location.name) {
       query = {address: location.name};
-    } else if (location.placeId) {
-      query = {placeId: location.placeId};
+    } else if (location.id) {
+      query = {placeId: location.id};
     } else {
       query = {location: location.coordinates};
     }
@@ -31,7 +31,9 @@ export class GeoMap {
     return new Promise( (resolve) => {
       let geocoder = new this.API.Geocoder;
       geocoder.geocode(query, function(results: google.maps.GeocoderResult[], status: any) {
-        console.log(results, status);
+        if (status !== google.maps.GeocoderStatus.OK) {
+          throw Error(status);
+        }
         let precisePosition = new Location(location.name, location.coordinates.lat, location.coordinates.lng, results);
         resolve(precisePosition);
       });

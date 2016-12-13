@@ -1,6 +1,5 @@
 export class Location {
   name: string;
-  placeId: string;
   private lat: number;
   private lng: number;
   private addresses: google.maps.GeocoderResult[];
@@ -19,7 +18,13 @@ export class Location {
     };
   }
 
+  public get id(): string {
+    let place = this.getCity();
+    return place ? place.place_id : "";
+  }
+
   public getCity(): google.maps.GeocoderResult {
+    console.log(this.addresses);
     if (!this.addresses || !this.addresses.length) {
       return;
     }

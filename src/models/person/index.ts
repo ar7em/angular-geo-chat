@@ -1,5 +1,13 @@
-import { Location } from "models/location";
-
 export class Person {
-  private online: boolean;
+  uid: string;
+  online: boolean;
+  displayName: string;
+  photoUrl: string;
+
+  constructor(data?: {uid: string, online?: boolean, displayName?: string, photoUrl?: string}) {
+    this.uid = data.uid;
+    this.online = data.online;
+    this.displayName = data.displayName;
+    this.photoUrl = data.photoUrl;
+  }
 }

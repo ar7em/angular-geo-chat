@@ -8,7 +8,7 @@ import { UserService } from "services/user";
   template: require("./template.html")
 })
 export class MenuComponent {
-  constructor(public af: AngularFire, private userService: UserService) {
+  constructor(private af: AngularFire, private userService: UserService) {
   }
 
   login() {

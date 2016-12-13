@@ -1,5 +1,5 @@
 <div>
   <div *ngFor="let message of messages">
-    {{ message.text }}
+    <message [message]="message" [author]="authors[message.authorId]"></message>
   </div>
 </div>

@@ -57,5 +57,14 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
     this.createMap();
+    this.locationService.getLocations().then( (locations: Location[]) => {
+      locations.forEach( (location: Location) => {
+        this.map.addMarker(location);
+      });
+    });
+
+    this.locationService.onLocationUpdate( ($key, location) => {
+      this.map.addMarker(location);
+    });
   }
 }

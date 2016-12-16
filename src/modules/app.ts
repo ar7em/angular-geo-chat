@@ -12,7 +12,8 @@ import { ChatComponent } from "components/chat";
 import { MenuComponent } from "components/menu";
 import { LocalityComponent } from "components/locality";
 import { UserInputComponent } from "components/input";
-import { MessageComponent} from "components/message";
+import { MessageComponent } from "components/message";
+import { NewRoomComponent } from "components/newRoom";
 
 import { firebaseConfig } from "config/firebase";
 import { facebookConfig } from "config/auth";
@@ -33,7 +34,8 @@ import { facebookConfig } from "config/auth";
     MenuComponent,
     LocalityComponent,
     UserInputComponent,
-    MessageComponent
+    MessageComponent,
+    NewRoomComponent
   ],
   bootstrap: [ AppComponent ]
 })

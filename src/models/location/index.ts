@@ -3,12 +3,24 @@ export class Location {
   private lat: number;
   private lng: number;
   private addresses: google.maps.GeocoderResult[];
+  private ownerId: string;
+  private lastUpdate: number;
+  private $key: string;
 
-  constructor(name?: string, lat?: number, lng?: number, addresses?: google.maps.GeocoderResult[]) {
-    this.name = name;
-    this.lat = lat;
-    this.lng = lng;
-    this.addresses = addresses;
+  constructor(params: { name?: string,
+                        lat?: number,
+                        lng?: number,
+                        addresses?: google.maps.GeocoderResult[],
+                        ownerId?: string,
+                        lastUpdate?: number
+                        $key?: string}) {
+    this.name = params.name;
+    this.lat = params.lat;
+    this.lng = params.lng;
+    this.addresses = params.addresses;
+    this.ownerId = params.ownerId;
+    this.lastUpdate = params.lastUpdate;
+    this.$key = params.$key;
   }
 
   public get coordinates(): {lat?: number, lng?: number} {
@@ -19,12 +31,14 @@ export class Location {
   }
 
   public get id(): string {
+    if (this.$key) {
+      return this.$key;
+    }
     let place = this.getCity();
     return place ? place.place_id : "";
   }
 
   public getCity(): google.maps.GeocoderResult {
-    console.log(this.addresses);
     if (!this.addresses || !this.addresses.length) {
       return;
     }
@@ -41,4 +55,16 @@ export class Location {
       return this.addresses[0];
     }
   };
+
+  public get data(): {name?: string,
+                      lat?: number,
+                      lng?: number,
+                      ownerId?: string } {
+    return {
+      name: this.name,
+      lat: this.lat,
+      lng: this.lng,
+      ownerId: this.ownerId
+    };
+  }
 };

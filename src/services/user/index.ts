@@ -18,7 +18,7 @@ export class UserService {
       if (!auth) {
         return;
       }
-      console.log(auth);
+
       this.uid = auth.uid;
       // Mark user as disconnect when connection drops
       const onlineRef = firebase.database().ref().child(`/users/${auth.uid}`);

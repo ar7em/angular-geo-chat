@@ -34,7 +34,11 @@ export class GeoMap {
         if (status !== google.maps.GeocoderStatus.OK) {
           throw Error(status);
         }
-        let precisePosition = new Location(location.name, location.coordinates.lat, location.coordinates.lng, results);
+        let precisePosition = new Location({
+          name: location.name,
+          lat: location.coordinates.lat,
+          lng: location.coordinates.lng,
+          addresses: results});
         resolve(precisePosition);
       });
     });
@@ -49,5 +53,24 @@ export class GeoMap {
       let correctionX = contentDiv.clientWidth / 2;
       this.map.panBy(correctionX, 0);
     }, 0);
+  }
+
+  public addListener(event: string, callback: (e: google.maps.event) => void) {
+    this.map.addListener.call(this.map, event, callback);
+  }
+
+  public getDiv(): any {
+    return this.map.getDiv();
+  }
+
+  public addMarker(location: Location) {
+    let marker = new this.API.Marker({
+      position: location.coordinates,
+      title: "Hello World!"
+    });
+
+    marker.setMap(this.map);
+
+    return marker;
   }
 }

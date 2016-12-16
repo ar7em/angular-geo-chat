@@ -1,0 +1,11 @@
+.newRoom {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  padding: 10px 30px 20px 20px;
+  background: red;
+
+  &__content {
+    pointer-events: auto;
+  }
+}

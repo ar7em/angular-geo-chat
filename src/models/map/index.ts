@@ -11,42 +11,44 @@ export class GeoMap {
       zoom: 8,
       disableDefaultUI: true
     });
+    this.getBounds = this.map.getBounds.bind(this.map);
   }
 
-  public setCenter(coordinates: google.maps.LatLngLiteral): void {
-    this.map.setCenter(coordinates);
-  }
+  public getBounds(): any {}
 
   public geocode(location: Location): Promise<any> {
     let query: any;
 
-    if (location.name) {
-      query = {address: location.name};
-    } else if (location.id) {
-      query = {placeId: location.id};
-    } else {
+    if (location.coordinates) {
       query = {location: location.coordinates};
+    } else if (location.name) {
+      query = {address: location.name};
     }
 
     return new Promise( (resolve) => {
       let geocoder = new this.API.Geocoder;
       geocoder.geocode(query, function(results: google.maps.GeocoderResult[], status: any) {
+        console.log("Geodecoded!", results);
         if (status !== google.maps.GeocoderStatus.OK) {
           throw Error(status);
         }
-        let precisePosition = new Location({
-          name: location.name,
-          lat: location.coordinates.lat,
-          lng: location.coordinates.lng,
-          addresses: results});
-        resolve(precisePosition);
+        location.assignAddresses(results);
+        resolve(location);
       });
     });
   }
 
   public fitBounds(bounds: google.maps.LatLngBounds): void {
     this.map.fitBounds(bounds);
+    this.applyGuiShift();
+  }
 
+  public setCenter(coordinates: google.maps.LatLngLiteral): void {
+    this.map.setCenter(coordinates);
+    this.applyGuiShift();
+  }
+
+  private applyGuiShift(): void {
     // Move the map to the left to prevent overlap with content div
     window.setTimeout(() => {
       let contentDiv = document.getElementById("mainContainer");

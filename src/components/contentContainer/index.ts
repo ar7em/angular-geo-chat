@@ -1,9 +1,4 @@
 import { Component } from "@angular/core";
-import { AngularFire } from "angularfire2";
-
-import { Location } from "models/location";
-
-import { LocationService } from "services/location";
 
 @Component({
   selector: "content",
@@ -11,19 +6,5 @@ import { LocationService } from "services/location";
   styles: [require("./style.scss")]
 })
 export class ContentContainer {
-  location: string;
-
-  constructor(public af: AngularFire, private locationService: LocationService) {
-    this.locationService.requestLocation();
-
-    locationService.locationSet$.subscribe(
-      (location: Location) => {
-        this.location = location.getCity().formatted_address;
-      }
-    );
-  }
-
-  onAutolocate() {
-    this.locationService.requestLocation(this.location);
-  }
+  constructor() {}
 }

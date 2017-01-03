@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 
 import { UserService } from "services/user";
-import { LocationService } from "services/location";
 
 @Component({
   selector: "userInput",
@@ -9,14 +8,8 @@ import { LocationService } from "services/location";
 })
 export class UserInputComponent {
   input: string;
-  target: string;
 
-  constructor(private userService: UserService, private locationService: LocationService) {
-    locationService.locationSet$.subscribe(
-      (location) => {
-        this.target = location.id;
-      }
-    );
+  constructor(private userService: UserService) {
   }
 
   login() {
@@ -24,6 +17,6 @@ export class UserInputComponent {
   }
 
   submit() {
-    this.userService.submitMessage(this.input, this.target);
+    this.userService.submitMessage(this.input);
   }
 }

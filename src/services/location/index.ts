@@ -1,22 +1,25 @@
 import { Injectable } from "@angular/core";
-import { Subject }    from "rxjs/Subject";
+import { Subject } from "rxjs/Subject";
 import { AngularFire, FirebaseListObservable } from "angularfire2";
 
-import { Location } from "models/location";
+import { UserService } from "services/user";
+
+import { Location, LocationQuery } from "models/location";
 
 @Injectable()
 export class LocationService {
-  private locationRequestedSource = new Subject<Location>();
+  private locationRequestedSource = new Subject<LocationQuery>();
   locationRequested$ = this.locationRequestedSource.asObservable();
 
-  private locationSetSource = new Subject<Location>();
+  private locationSetSource = new Subject<LocationQuery>();
   locationSet$ = this.locationSetSource.asObservable();
 
   private locationsObservable: FirebaseListObservable<any[]>;
 
   locations: {[key: string]: Location} = {};
 
-  constructor(private af: AngularFire) {
+  constructor(private af: AngularFire,
+              private userService: UserService) {
     this.locationsObservable = af.database.list("/locations", {
       /* TODO: Use Geofire to get locations in users vicinity */
       query: {
@@ -27,20 +30,33 @@ export class LocationService {
     });
   }
 
-  requestLocation(name?: string): void {
-    if (!name) {
-      this.getCurrentPosition().then( (position) => {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
-        let location = new Location({lat: lat, lng: lng});
-        this.locationRequestedSource.next(location);
-      });
+  requestLocation(params: {location?: Location,
+                            name?: string,
+                            coordinates?: google.maps.LatLngLiteral} = {}): void {
+    let location: Location;
+    let meta = {};
 
+    if (params.location) {
+      location = params.location;
+    } else if (params.name) {
+      location = new Location({name: params.name});
+      meta = { auto: true };
+    } else if (params.coordinates) {
+      location = new Location({lat: params.coordinates.lat, lng: params.coordinates.lng});
+    }
+
+    if (location) {
+      this.locationRequestedSource.next({location, meta});
       return;
     }
 
-    let location = new Location({name: name});
-    this.locationRequestedSource.next(location);
+    this.getCurrentPosition().then( (position) => {
+      let lat = position.coords.latitude;
+      let lng = position.coords.longitude;
+      location = new Location({lat: lat, lng: lng});
+      meta = { auto: true };
+      this.locationRequestedSource.next({location, meta});
+    });
   };
 
   getCurrentPosition(): Promise<any> {
@@ -59,8 +75,20 @@ export class LocationService {
     }
   }
 
-  setLocation(location: Location): void {
-    this.locationSetSource.next(location);
+  setLocation(query: LocationQuery): void {
+    let meta = query.meta || {};
+    let location: any = query.location;
+
+    if (meta.auto) {
+      location = location.getCity();
+    }
+
+    if (location.constructor.name === Location.name) {
+      this.locationSetSource.next({location});
+      this.userService.joinChannel(location.id);
+    } else if (typeof location === "string") {
+      this.requestLocation({name: location});
+    }
   }
 
   createLocation(lat: number, lng: number): void {
@@ -70,6 +98,7 @@ export class LocationService {
       lng: lng,
       lastUpdate: Date.now()
     });
+    this.requestLocation({coordinates: {lat: lat, lng: lng}});
   }
 
   getLocations(): Promise<Location[]> {
@@ -86,7 +115,7 @@ export class LocationService {
       }).subscribe( (snapshots: any[]) => {
         let locations: Location[] = [];
         snapshots.forEach( (data: {$key: string, lat: number, lng: number, lastUpdate: number}) => {
-          let location = new Location({lat: data.lat, lng: data.lng, lastUpdate: data.lastUpdate});
+          let location = new Location({$key: data.$key, lat: data.lat, lng: data.lng, lastUpdate: data.lastUpdate});
           this.locations[data.$key] = location;
           locations.push(location);
         });

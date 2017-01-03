@@ -1,17 +1,21 @@
 import { Injectable } from "@angular/core";
-import { AngularFire } from "angularfire2";
-import { Observable } from "rxjs/Observable";
+import { AngularFire, FirebaseObjectObservable } from "angularfire2";
+import { Subject } from "rxjs/Subject";
 import * as firebase from "firebase";
 
-import { Person } from "models/person";
 import { Message } from "models/message";
 
 import { facebookConfig } from "config/auth";
 
 @Injectable()
 export class UserService {
-  person: Observable<Person>;
+  private user: FirebaseObjectObservable<any>;
+
   private uid: string;
+  private currentChannelId: string;
+
+  private channelRequestedSource = new Subject<string>();
+  channelSet$ = this.channelRequestedSource.asObservable();
 
   constructor(private af: AngularFire) {
     this.af.auth.subscribe( (auth) => {
@@ -21,11 +25,13 @@ export class UserService {
 
       this.uid = auth.uid;
       // Mark user as disconnect when connection drops
+      // (notice, the `onDisconnect` handler is not available with AF2)
       const onlineRef = firebase.database().ref().child(`/users/${auth.uid}`);
       onlineRef.onDisconnect().update({"online": false});
+
       // Mark user as online for now
-      const userObservable = af.database.object(`/users/${auth.uid}`);
-      userObservable.set({
+      this.user = af.database.object(`/users/${auth.uid}`);
+      this.user.set({
         "online": true,
         "displayName": auth.auth.displayName,
         "photoUrl": auth.auth.photoURL
@@ -41,9 +47,17 @@ export class UserService {
     this.af.auth.logout();
   }
 
-  submitMessage(text: string, target: string) {
-    let message = new Message(text, this.uid, target);
+  submitMessage(text: string) {
+    let message = new Message(text, this.uid, this.currentChannelId);
     let messages = this.af.database.list(`/messages`);
     messages.push(message.data);
+  }
+
+  joinChannel(id: string) {
+    this.user.set({
+      "channel": id
+    });
+    this.channelRequestedSource.next(id);
+    this.currentChannelId = id;
   }
 }

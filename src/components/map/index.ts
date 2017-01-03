@@ -5,7 +5,7 @@ import { MapService } from "services/map";
 import { LocationService } from "services/location";
 
 import { GeoMap } from "models/map";
-import { Location } from "models/location";
+import { Location, LocationQuery } from "models/location";
 
 const mapElementId = "googleMap";
 
@@ -19,19 +19,23 @@ export class MapComponent implements OnInit {
   requestedLocation: Location;
   subscription: Subscription;
 
-  constructor(private mapService: MapService, private locationService: LocationService) {
+  constructor(private mapService: MapService,
+              private locationService: LocationService) {
     this.subscription = locationService.locationRequested$.subscribe(
-      (requestedLocation: Location) => {
-        this.requestedLocation = requestedLocation;
-        this.map.geocode(requestedLocation).then( (location: Location) => {
-          locationService.setLocation(location);
+      (query: LocationQuery) => {
+        this.requestedLocation = query.location;
+        if (!this.map) {
+          return;
+        }
+        this.map.geocode(this.requestedLocation).then( (location: Location) => {
+          locationService.setLocation({location: location, meta: query.meta});
         });
       }
     );
 
     this.subscription = locationService.locationSet$.subscribe(
-      (location: Location) => {
-        this.positionMap(location);
+      (query: LocationQuery) => {
+        this.positionMap(query.location);
       }
     );
   };
@@ -48,10 +52,17 @@ export class MapComponent implements OnInit {
       return;
     }
 
-    let city = location.getCity();
+    if (location.coordinates) {
+      let isInBounds = this.map.getBounds().contains(location.coordinates);
+      if (isInBounds) {
+        return;
+      } else {
+        this.map.setCenter(location.coordinates);
+      }
+    }
 
-    if (city) {
-      this.map.fitBounds(city.geometry.bounds);
+    if (location.bounds) {
+      this.map.fitBounds(location.bounds);
     }
   }
 
@@ -59,12 +70,20 @@ export class MapComponent implements OnInit {
     this.createMap();
     this.locationService.getLocations().then( (locations: Location[]) => {
       locations.forEach( (location: Location) => {
-        this.map.addMarker(location);
+        this.addMarker(location);
       });
     });
 
     this.locationService.onLocationUpdate( ($key, location) => {
-      this.map.addMarker(location);
+      this.addMarker(location);
     });
+  }
+
+  addMarker(location: Location): google.maps.Marker {
+    let marker = this.map.addMarker(location);
+    marker.addListener("click", () => {
+      this.locationService.requestLocation({location: location});
+    });
+    return marker;
   }
 }

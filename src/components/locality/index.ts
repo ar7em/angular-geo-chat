@@ -1,9 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { AngularFire } from "angularfire2";
 
-import { Location } from "models/location";
+import { LocationQuery } from "models/location";
 
 import { LocationService } from "services/location";
+import { UserService } from "services/user";
 
 @Component({
   selector: "locality",
@@ -12,15 +13,20 @@ import { LocationService } from "services/location";
 export class LocalityComponent {
   location: string;
 
-  constructor(public af: AngularFire, private locationService: LocationService) {
+  constructor(private af: AngularFire,
+              private locationService: LocationService,
+              private zone: NgZone,
+              private userService: UserService) {
     locationService.locationSet$.subscribe(
-      (location: Location) => {
-        this.location = location.getCity().formatted_address;
+      (query: LocationQuery) => {
+        this.zone.run( () => {
+          this.location = query.location.address;
+        });
       }
     );
   }
 
   onAutolocate() {
-    this.locationService.requestLocation(this.location);
+    this.locationService.requestLocation({name: this.location});
   }
 }

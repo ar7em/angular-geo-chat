@@ -1,13 +1,13 @@
 import {Subject} from "rxjs/Subject";
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectorRef } from "@angular/core";
 import { AngularFire, FirebaseListObservable } from "angularfire2";
 
 import { Message } from "models/message";
 import { Person } from "models/person";
-import { Location } from "models/location";
 
 import { LocationService } from "services/location";
+import { UserService } from "services/user";
 
 @Component({
   selector: "chat",
@@ -20,7 +20,10 @@ export class ChatComponent {
   messages: Message[];
   authors: {[key: string]: Person};
 
-  constructor(public af: AngularFire, private locationService: LocationService) {
+  constructor(private ref: ChangeDetectorRef,
+              private af: AngularFire,
+              private locationService: LocationService,
+              private userService: UserService) {
     this.messages = [];
     this.authors = {};
     this.isRendered = {};
@@ -40,6 +43,7 @@ export class ChatComponent {
           let message = new Message(data.text, data.authorId);
           this.messages.push(message);
           this.isRendered[data.$key] = true;
+          this.ref.detectChanges();
         }
         // Retrieve data about author and create Person object
         if (data.authorId && !this.authors[data.authorId]) {
@@ -47,16 +51,22 @@ export class ChatComponent {
           authorObservable.subscribe( (authorData) => {
             let author = new Person(authorData);
             this.authors[data.authorId] = author;
+            this.ref.detectChanges();
           });
         }
       });
     });
 
-    locationService.locationSet$.subscribe(
-      (location: Location) => {
+    locationService.locationRequested$.subscribe(
+      () => {
         this.isRendered = {};
         this.messages = [];
-        this.locationId.next(location.id);
+      }
+    );
+
+    userService.channelSet$.subscribe(
+      (id: string) => {
+        this.locationId.next(id);
       }
     );
   }

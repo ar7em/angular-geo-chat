@@ -93,12 +93,14 @@ export class LocationService {
 
   createLocation(lat: number, lng: number): void {
     let locations = this.af.database.list("/locations");
-    locations.push({
+    let key = locations.push({
       lat: lat,
       lng: lng,
       lastUpdate: Date.now()
-    });
-    this.requestLocation({coordinates: {lat: lat, lng: lng}});
+    }).key;
+    let newLocation = new Location({$key: key, lat, lng});
+    this.requestLocation({location: newLocation});
+
   }
 
   getLocations(): Promise<Location[]> {

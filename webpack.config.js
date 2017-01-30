@@ -61,11 +61,11 @@ module.exports = {
         exclude: [/\.(spec|e2e)\.ts$/]
       },
       {
-        test: /components\/.+\.(html)$/,
+        test: /components[\\\/].+\.(html)$/,
         loader: "raw-loader"
       },
       {
-        test: /templates\/.+\.(html)$/,
+        test: /templates[\\\/].+\.(html)$/,
         loaders: [
           "html?interpolate"
         ]

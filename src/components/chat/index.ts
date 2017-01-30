@@ -37,10 +37,10 @@ export class ChatComponent {
     });
 
     this.messagesObservable.subscribe( (observables: any[]) => {
-      observables.forEach( (data: {$key: string, text?: string, authorId?: string}) => {
+      observables.forEach( (data: {$key: string, text?: string, authorId?: string, timestamp?: any}) => {
         // Create Message object
         if (!this.isRendered[data.$key]) {
-          let message = new Message(data.text, data.authorId);
+          let message = new Message(data.text, data.authorId, "", data.timestamp);
           this.messages.push(message);
           this.isRendered[data.$key] = true;
           this.ref.detectChanges();

@@ -48,13 +48,14 @@ export class UserService {
   }
 
   submitMessage(text: string) {
-    let message = new Message(text, this.uid, this.currentChannelId);
+    let datestamp = firebase.database.ServerValue.TIMESTAMP;
+    let message = new Message(text, this.uid, this.currentChannelId, datestamp);
     let messages = this.af.database.list(`/messages`);
     messages.push(message.data);
   }
 
   joinChannel(id: string) {
-    this.user.set({
+    this.user.update({
       "channel": id
     });
     this.channelRequestedSource.next(id);

@@ -3,13 +3,15 @@ import { Location } from "models/location";
 export class GeoMap {
   private API: any;
   private map: google.maps.Map;
+  private panning: boolean;
 
   constructor(API: any, element: HTMLElement) {
     this.API = API;
     this.map = new API.Map(element, {
       center: {lat: -34.397, lng: 150.644},
       zoom: 8,
-      disableDefaultUI: true
+      disableDefaultUI: true,
+      disablePanMomentum: true
     });
     this.getBounds = this.map.getBounds.bind(this.map);
   }
@@ -50,11 +52,21 @@ export class GeoMap {
 
   private applyGuiShift(): void {
     // Move the map to the left to prevent overlap with content div
+    if (this.panning) {
+      return;
+    }
+
+    this.panning = true;
+
     window.setTimeout(() => {
       let contentDiv = document.getElementById("mainContainer");
       let correctionX = contentDiv.clientWidth / 2;
       this.map.panBy(correctionX, 0);
     }, 0);
+
+    window.setTimeout(() => {
+      this.panning = false;
+    }, 500);
   }
 
   public addListener(event: string, callback: (e: google.maps.event) => void) {

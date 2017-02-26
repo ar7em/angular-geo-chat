@@ -20,5 +20,8 @@
     "emitRequireType": true
   },
   "compileOnSave": false,
-  "buildOnSave": false
+  "buildOnSave": false,
+  "files": [
+    "src/main.d.ts"
+  ]
 }

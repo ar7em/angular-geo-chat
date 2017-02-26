@@ -8,7 +8,8 @@ import { Person } from "models/person";
 
 @Component({
   selector: "message",
-  template: require("./template.html")
+  template: require("./template.html"),
+  styles: [require("./style.scss")]
 })
 export class MessageComponent {
   @Input()

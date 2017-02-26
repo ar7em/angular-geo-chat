@@ -1,5 +1,22 @@
-<div>
-  {{ author?.displayName }}
-  {{ message?.text }}
-  {{ message?.timestamp }}
+<div class="message">
+  <div class="message__aside">
+    <div class="message__avatar">
+      <div *ngIf="author?.photoUrl">
+        <img class="message__photo" src="{{ author?.photoUrl }}">
+      </div>
+    </div>
+  </div>
+  <div class="message__main">
+    <div class="message__name">
+      {{ author?.displayName }}
+    </div>
+    <div class="message__content">
+      {{ message?.text }}
+    </div>
+  </div>
+  <div class="message__aside">
+    <div class="message__time">
+      {{ message?.timestamp }}
+    </div>
+  </div>
 </div>

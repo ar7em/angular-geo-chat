@@ -18,5 +18,16 @@ export class MessageComponent {
   @Input()
   message: Message;
 
-  constructor(private af: AngularFire) {}
+  @Input()
+  isFirst: Boolean;
+
+  constructor(private af: AngularFire) {
+  }
+
+  getTime(): string {
+    if (this.message) {
+      return new Date(this.message.timestamp).toLocaleTimeString();
+    }
+    return "";
+  }
 };

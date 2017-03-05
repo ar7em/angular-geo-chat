@@ -55,9 +55,11 @@ export class UserService {
   }
 
   joinChannel(id: string) {
-    this.user.update({
-      "channel": id
-    });
+    if (this.user) {
+      this.user.update({
+        "channel": id
+      });
+    }
     this.channelRequestedSource.next(id);
     this.currentChannelId = id;
   }

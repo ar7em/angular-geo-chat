@@ -1,5 +1,3 @@
-<div>
-  <div *ngFor="let message of messages">
-    <message [message]="message" [author]="authors[message.authorId]"></message>
-  </div>
+<div *ngFor="let message of messages; let isFirst = first;">
+  <message [message]="message" [author]="authors[message.authorId]" [isFirst]="isFirst"></message>
 </div>
